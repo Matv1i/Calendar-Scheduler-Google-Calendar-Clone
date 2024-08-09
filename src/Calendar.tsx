@@ -9,6 +9,8 @@ import {
 } from "date-fns"
 import SideBar from "./SideBar"
 
+const weekDays: string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+
 const Calendar = () => {
   const [selectedMonth, setSelectedMonth] = useState(new Date())
 
@@ -24,7 +26,11 @@ const Calendar = () => {
 
   return (
     <div className="w-full min-h-full">
-      <SideBar calendarDays={calendarDays} selectedMonth={selectedMonth} />
+      <SideBar
+        calendarDays={calendarDays}
+        weekDays={weekDays}
+        selectedMonth={selectedMonth}
+      />
     </div>
   )
 }
