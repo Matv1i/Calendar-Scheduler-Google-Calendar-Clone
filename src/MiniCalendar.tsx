@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useMemo } from "react"
 import { useCalendar } from "./CalendarContext"
 import { format, isSameDay, isSameMonth } from "date-fns"
 
@@ -10,6 +10,7 @@ const MiniCalendar: React.FC = () => {
     goToNextMonth,
     goToPreviousMonth,
     events,
+    setSelectedMonth,
   } = useCalendar()
 
   const pointers: string[] = ["blue.png", "green.png", "purple.png"]
@@ -49,29 +50,43 @@ const MiniCalendar: React.FC = () => {
           </div>
         ))}
         {calendarDays.map((day, index) => {
-          const isCurrentMonth = isSameMonth(day, selectedMonth)
-          const isCurrentDay = isSameDay(day, new Date())
+          const isCurrentMonth = useMemo(
+            () => isSameMonth(day, selectedMonth),
+            [selectedMonth]
+          )
+          const isCurrentDay = isSameDay(day, selectedMonth)
 
           const dayEvents = events.filter((event) => isSameDay(day, event.date))
+
+          console.log(dayEvents)
 
           return (
             <div
               key={index}
-              className={`border border-black-nondark  p-2 rounded-full flex flex-col justify-center items-center h-10 ${
+              onClick={() => setSelectedMonth(day)}
+              className={`border border-black-nondark cursor-pointer relative p-2 rounded-full flex flex-col justify-center items-center h-10 ${
                 isCurrentDay ? "bg-red-700" : "bg-black-nondark"
               } ${isCurrentMonth ? "text-white" : "text-gray-500"}`}
             >
               {format(day, "dd")}
-              <div className="flex justify-center items-center gap-0.5 mt-1">
-                {dayEvents.map((event, idx) => (
-                  <img
-                    key={event.id}
-                    width={6}
-                    src={`src/assets/${event.color}.png`}
-                    alt={event.color}
-                    className="object-contain absolute"
-                  />
-                ))}
+              <div className="flex justify-center absolute bottom-1 gap-0.5 items-center  mt-1">
+                {dayEvents
+                  .filter((_edc, index) => index < 3)
+                  .map((event, idx) => {
+                    if (isCurrentDay) {
+                      return
+                    }
+                    console.log(event.color)
+                    return (
+                      <img
+                        key={event.id}
+                        width={6}
+                        src={`src/assets/${event.color}.png`}
+                        alt={event.color}
+                        className="object-contain "
+                      />
+                    )
+                  })}
               </div>
             </div>
           )

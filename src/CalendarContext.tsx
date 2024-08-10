@@ -34,6 +34,7 @@ interface CalendarContextProps {
   events: Events[]
   addEvent: (event: Events) => void
   removeEvent: (id: string) => void
+  setEvents: React.Dispatch<React.SetStateAction<Events[]>>
 }
 
 const CalendarContext = createContext<CalendarContextProps | undefined>(
@@ -100,6 +101,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
         events,
         addEvent,
         removeEvent,
+        setEvents,
       }}
     >
       {children}
