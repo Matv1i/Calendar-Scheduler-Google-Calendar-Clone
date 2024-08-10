@@ -3,42 +3,8 @@ import { useCalendar } from "./CalendarContext"
 import MiniCalendar from "./MiniCalendar"
 import { format } from "date-fns"
 
-// Пример массива событий
-const events = [
-  {
-    time: "8:30 - 10:00",
-    description: "Dinner with John",
-    pointer: "src/assets/green.png",
-  },
-  {
-    time: "10:30 - 11:00",
-    description: "Meeting with Sarah",
-    pointer: "src/assets/blue.png",
-  },
-  {
-    time: "12:00 - 13:00",
-    description: "Lunch with Team",
-    pointer: "src/assets/purple.png",
-  },
-  {
-    time: "8:30 - 10:00",
-    description: "Dinner with John",
-    pointer: "src/assets/green.png",
-  },
-  {
-    time: "10:30 - 11:00",
-    description: "Meeting with Sarah",
-    pointer: "src/assets/blue.png",
-  },
-  {
-    time: "12:00 - 13:00",
-    description: "Lunch with Team",
-    pointer: "src/assets/purple.png",
-  },
-]
-
 const SideBar: React.FC = () => {
-  const { selectedMonth } = useCalendar()
+  const { selectedMonth, events } = useCalendar()
 
   return (
     <div className="text-white bg-black-nondark w-1/5 h-full flex flex-col">
@@ -51,16 +17,15 @@ const SideBar: React.FC = () => {
 
       <MiniCalendar />
 
-      {/* Контейнер с прокруткой */}
       <div className="px-3 overflow-auto flex-grow">
         {events.map((event, index) => (
           <div key={index} className="mb-4">
             <div className="flex w-full justify-between items-center">
               <p className="font-bold text-xl text-light-gray">
-                {format(selectedMonth, "EEEE")}
+                {format(event.date, "EEEE")}
               </p>
               <p className="text-sm font-light text-light-gray">
-                {selectedMonth.toLocaleDateString()}
+                {format(event.date, "dd/MM/yy")}
               </p>
             </div>
             <div className="flex flex-col">
@@ -68,12 +33,14 @@ const SideBar: React.FC = () => {
                 <img
                   width={12}
                   className="object-contain"
-                  src={event.pointer}
+                  src={`src/assets/${event.color}.png`}
                   alt="Event pointer"
                 />
-                <p className="text-light-gray">{event.time}</p>
+                <p className="text-light-gray">
+                  {event.timeStart}-{event.timeEnd}
+                </p>
               </div>
-              <p className="text-sm pl-4">{event.description}</p>
+              <p className="text-sm pl-4">{event.name}</p>
             </div>
           </div>
         ))}

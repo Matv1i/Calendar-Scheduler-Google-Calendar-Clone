@@ -9,24 +9,33 @@ const MiniCalendar: React.FC = () => {
     calendarDays,
     goToNextMonth,
     goToPreviousMonth,
+    events,
   } = useCalendar()
 
-  const pointers: string[] = [
-    "src/assets/blue.png",
-    "src/assets/green.png",
-    "src/assets/purple.png",
-  ]
+  const pointers: string[] = ["blue.png", "green.png", "purple.png"]
 
   return (
-    <div className="flex flex-col bg-black-nondark p-2">
-      <div className="flex justify-between p-2">
-        <div className="flex text-3xl gap-2 font-light">
-          <p>{format(selectedMonth, "MMMM")}</p>
-          <p className="text-red-600">{selectedMonth.getFullYear()}</p>
+    <div className="flex flex-col bg-black-nondark  rounded-lg ">
+      <div className="flex justify-between p-2 items-center">
+        <div className="text-3xl font-light">
+          <p className="inline">{format(selectedMonth, "MMMM")}</p>
+          <p className="inline text-red-600 ml-2">
+            {selectedMonth.getFullYear()}
+          </p>
         </div>
         <div className="flex gap-2">
-          <button onClick={goToPreviousMonth}>{"<"}</button>
-          <button onClick={goToNextMonth}>{">"}</button>
+          <button
+            className="text-xl px-2 py-1 rounded-md hover:bg-gray-700"
+            onClick={goToPreviousMonth}
+          >
+            {"<"}
+          </button>
+          <button
+            className="text-xl px-2 py-1 rounded-md hover:bg-gray-700"
+            onClick={goToNextMonth}
+          >
+            {">"}
+          </button>
         </div>
       </div>
 
@@ -41,21 +50,27 @@ const MiniCalendar: React.FC = () => {
         ))}
         {calendarDays.map((day, index) => {
           const isCurrentMonth = isSameMonth(day, selectedMonth)
-          const isCurrentDay = isSameDay(day, selectedMonth)
+          const isCurrentDay = isSameDay(day, new Date())
+
+          const dayEvents = events.filter((event) => isSameDay(day, event.date))
 
           return (
             <div
               key={index}
-              className={`border border-black-nondark p-1 px-2 text-md rounded-full ${
-                isCurrentDay ? "bg-sky-400" : "bg-black-nondark"
-              } flex flex-col justify-center items-center ${
-                isCurrentMonth ? "text-white" : "text-gray-500"
-              }`}
+              className={`border border-black-nondark  p-2 rounded-full flex flex-col justify-center items-center h-10 ${
+                isCurrentDay ? "bg-red-700" : "bg-black-nondark"
+              } ${isCurrentMonth ? "text-white" : "text-gray-500"}`}
             >
               {format(day, "dd")}
-              <div className="flex justify-center items-center gap-0.5">
-                {pointers.map((pointer, idx) => (
-                  <img width={5} src={pointer} key={idx} />
+              <div className="flex justify-center items-center gap-0.5 mt-1">
+                {dayEvents.map((event, idx) => (
+                  <img
+                    key={event.id}
+                    width={6}
+                    src={`src/assets/${event.color}.png`}
+                    alt={event.color}
+                    className="object-contain absolute"
+                  />
                 ))}
               </div>
             </div>

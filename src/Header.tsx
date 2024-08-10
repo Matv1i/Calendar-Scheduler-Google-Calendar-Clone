@@ -2,7 +2,7 @@ import React from "react"
 
 const Header: React.FC = () => {
   return (
-    <div className="w-full py-2 h-12  px-4 justify-between flex gap-1">
+    <div className="w-full py-2 my-2 h-12   px-4 justify-between flex gap-1">
       <div className="flex gap-1  items-center">
         <p className="text-black flex py-0.5 bg-gray-200 rounded-l-lg px-2">
           {"<"}
