@@ -1,37 +1,16 @@
-import React, { useMemo, useState } from "react"
-import {
-  startOfMonth,
-  startOfWeek,
-  StartOfWeekOptions,
-  endOfWeek,
-  endOfMonth,
-  eachDayOfInterval,
-} from "date-fns"
+import React from "react"
 import SideBar from "./SideBar"
-
-const weekDays: string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+import { CalendarProvider } from "./CalendarContext"
+import DaysEvent from "./DaysEvent"
 
 const Calendar = () => {
-  const [selectedMonth, setSelectedMonth] = useState(new Date())
-
-  const calendarDays: any = useMemo(() => {
-    const firstWeekStart = startOfWeek(startOfMonth(selectedMonth))
-
-    const lastWeek = endOfWeek(endOfMonth(selectedMonth))
-
-    return eachDayOfInterval({ start: firstWeekStart, end: lastWeek })
-  }, [selectedMonth])
-
-  console.log(calendarDays)
-
   return (
-    <div className="w-full min-h-full">
-      <SideBar
-        calendarDays={calendarDays}
-        weekDays={weekDays}
-        selectedMonth={selectedMonth}
-      />
-    </div>
+    <CalendarProvider>
+      <div className="w-full h-screen flex">
+        <SideBar />
+        <DaysEvent />
+      </div>
+    </CalendarProvider>
   )
 }
 

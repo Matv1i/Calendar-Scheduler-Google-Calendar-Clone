@@ -1,69 +1,82 @@
 import React from "react"
+import { useCalendar } from "./CalendarContext"
+import MiniCalendar from "./MiniCalendar"
 import { format } from "date-fns"
 
-interface SideBarProps {
-  weekDays: string[]
-  calendarDays: Date[]
-  selectedMonth: Date
-}
+// Пример массива событий
+const events = [
+  {
+    time: "8:30 - 10:00",
+    description: "Dinner with John",
+    pointer: "src/assets/green.png",
+  },
+  {
+    time: "10:30 - 11:00",
+    description: "Meeting with Sarah",
+    pointer: "src/assets/blue.png",
+  },
+  {
+    time: "12:00 - 13:00",
+    description: "Lunch with Team",
+    pointer: "src/assets/purple.png",
+  },
+  {
+    time: "8:30 - 10:00",
+    description: "Dinner with John",
+    pointer: "src/assets/green.png",
+  },
+  {
+    time: "10:30 - 11:00",
+    description: "Meeting with Sarah",
+    pointer: "src/assets/blue.png",
+  },
+  {
+    time: "12:00 - 13:00",
+    description: "Lunch with Team",
+    pointer: "src/assets/purple.png",
+  },
+]
 
-const SideBar: React.FC<SideBarProps> = ({
-  weekDays,
-  calendarDays,
-  selectedMonth,
-}) => {
-  const pointers: string[] = [
-    "src/assets/blue.png",
-    "src/assets/green.png",
-    "src/assets/purple.png",
-  ]
+const SideBar: React.FC = () => {
+  const { selectedMonth } = useCalendar()
+
   return (
-    <div className="text-white py-4 bg-black-nondark w-1/5 h-full">
-      <div className="flex flex-col gap-4 h-full">
-        <div className="w-full flex items-ce justify-between">
-          <p></p>
-          <div className="mr-2  text-2xl p rounded-md bg-gray-dark px-3 flex justify-center items-center">
-            +
-          </div>
+    <div className="text-white bg-black-nondark w-1/5 h-full flex flex-col">
+      <div className="flex justify-between items-center p-4">
+        <p></p>
+        <div className="text-2xl p rounded-md bg-gray-dark px-3 flex justify-center items-center">
+          +
         </div>
-        <div className="flex justify-between p-2 ">
-          <div className="flex  text-3xl gap-2 font-light">
-            <p className="  ">{format(selectedMonth, "MMMM")}</p>
-            <p className=" text-red-600">{selectedMonth.getFullYear()}</p>
-          </div>
+      </div>
 
-          <div className="flex gap-2">
-            <button>{"<"}</button>
-            <button>{">"}</button>
-          </div>
-        </div>
+      <MiniCalendar />
 
-        <div
-          id="calendar"
-          className="grid grid-cols-7 grid-rows-6 gap-1 p-2 flex-grow overflow-auto"
-        >
-          {weekDays.map((day, index) => (
-            <div
-              key={index}
-              className="text-xs text-gray-400 flex justify-center"
-            >
-              {day}
+      {/* Контейнер с прокруткой */}
+      <div className="px-3 overflow-auto flex-grow">
+        {events.map((event, index) => (
+          <div key={index} className="mb-4">
+            <div className="flex w-full justify-between items-center">
+              <p className="font-bold text-xl text-light-gray">
+                {format(selectedMonth, "EEEE")}
+              </p>
+              <p className="text-sm font-light text-light-gray">
+                {selectedMonth.toLocaleDateString()}
+              </p>
             </div>
-          ))}
-          {calendarDays.map((day, index) => (
-            <div
-              key={index}
-              className="border border-black-nondark  p-1 px-2 text-md rounded-full flex flex-col justify-center  items-center"
-            >
-              {format(day, "dd")}
-              <div className="flex justify-center items-center gap-0.5">
-                {pointers.map((pointers, index) => (
-                  <img width={5} src={pointers} key={index} />
-                ))}
+            <div className="flex flex-col">
+              <div className="flex justify-start gap-1">
+                <img
+                  width={12}
+                  className="object-contain"
+                  src={event.pointer}
+                  alt="Event pointer"
+                />
+                <p className="text-light-gray">{event.time}</p>
               </div>
+              <p className="text-sm pl-4">{event.description}</p>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   )

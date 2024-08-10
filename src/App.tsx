@@ -3,9 +3,9 @@ import Calendar from "./Calendar"
 
 const App: React.FC = () => {
   return (
-    <div className="w-full min-h-full">
+    <>
       <Calendar />
-    </div>
+    </>
   )
 }
 

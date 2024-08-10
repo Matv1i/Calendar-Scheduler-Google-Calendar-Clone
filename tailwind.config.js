@@ -6,6 +6,7 @@ export default {
       colors: {
         "black-nondark": "#18181B",
         "gray-dark": "#222222",
+        "light-gray": "#A1A1AA",
       },
     },
   },
