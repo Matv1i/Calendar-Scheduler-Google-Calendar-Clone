@@ -1,27 +1,20 @@
 import React, { useState, useEffect } from "react"
-import { useCalendar } from "./CalendarContext"
+import { useCalendar } from "../Context/CalendarContext"
 
 type PropsDate = {
-  certainDate: Date | undefined
-  showModal: boolean
-  setShowModal: (show: boolean) => void
+  certainDate?: Date
 }
 
-const FormAddEvent: React.FC<PropsDate> = ({
-  certainDate,
-  showModal,
-  setShowModal,
-}) => {
-  const { addEvent } = useCalendar()
+const FormAddEvent: React.FC<PropsDate> = ({ certainDate }) => {
+  const { addEvent, setShowModal } = useCalendar()
   const [newEvent, setNewEvent] = useState({
     name: "",
-    date: certainDate || new Date(), // Default to current date if certainDate is undefined
+    date: certainDate || "",
     timeStart: "",
     timeEnd: "",
     color: "",
   })
 
-  // Update newEvent.date whenever certainDate changes
   useEffect(() => {
     if (certainDate) {
       setNewEvent((prevEvent) => ({
@@ -32,15 +25,21 @@ const FormAddEvent: React.FC<PropsDate> = ({
   }, [certainDate])
 
   const handleSaveEvent = () => {
-    if (!newEvent.name || !newEvent.timeStart || !newEvent.timeEnd) {
-      alert("Пожалуйста, заполните все поля.")
+    if (
+      !newEvent.name ||
+      !newEvent.timeStart ||
+      !newEvent.timeEnd ||
+      !newEvent.color ||
+      !newEvent.date
+    ) {
+      alert("Please input a full form.")
       return
     }
     addEvent({ ...newEvent, id: Math.random().toString(36).substr(2, 9) })
     setShowModal(false)
     setNewEvent({
       name: "",
-      date: certainDate || new Date(),
+      date: certainDate || "",
       timeStart: "",
       timeEnd: "",
       color: "",
@@ -64,10 +63,13 @@ const FormAddEvent: React.FC<PropsDate> = ({
             onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
           />
         </div>
+
         <div className="mb-4">
           <label className="block mb-1">Время начала:</label>
           <input
             type="time"
+            v-model="hours"
+            step="900"
             className="w-full border p-2 rounded"
             value={newEvent.timeStart}
             onChange={(e) =>
@@ -86,28 +88,42 @@ const FormAddEvent: React.FC<PropsDate> = ({
             }
           />
         </div>
-        <div className="mb-4">
+        {certainDate ? null : (
+          <div className="mb-4">
+            <label className="block mb-1">Date:</label>
+            <input
+              type="date"
+              className="w-full border p-2 rounded"
+              value={newEvent.date}
+              onChange={(e) =>
+                setNewEvent({ ...newEvent, date: e.target.value })
+              }
+            />
+          </div>
+        )}
+
+        <div className="mb-4 flex gap-2">
           <p>Pick a color:</p>
-          <div className="flex gap-3">
+          <div className="flex gap-3 ">
             <img
               onClick={() => handleColor("bg-blue-spec")}
               width={20}
               className="object-contain cursor-pointer"
-              src="src/assets/blue.png"
+              src="src/assets/bg-blue-spec.png"
               alt="blue"
             />
             <img
               onClick={() => handleColor("bg-green-spec")}
               width={20}
               className="object-contain cursor-pointer"
-              src="src/assets/green.png"
+              src="src/assets/bg-green-spec.png"
               alt="green"
             />
             <img
               onClick={() => handleColor("bg-purple-spec")}
               width={20}
               className="object-contain cursor-pointer"
-              src="src/assets/purple.png"
+              src="src/assets/bg-purple-spec.png"
               alt="purple"
             />
           </div>
@@ -120,7 +136,7 @@ const FormAddEvent: React.FC<PropsDate> = ({
             Отмена
           </button>
           <button
-            className="px-4 py-2 bg-blue-500 text-white rounded"
+            className="px-4 py-2 bg-red-500 text-white rounded"
             onClick={handleSaveEvent}
           >
             Сохранить

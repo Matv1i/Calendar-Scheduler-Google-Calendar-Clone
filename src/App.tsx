@@ -1,5 +1,5 @@
 import React from "react"
-import Calendar from "./Calendar"
+import Calendar from "./Pages/Calendar"
 
 const App: React.FC = () => {
   return (

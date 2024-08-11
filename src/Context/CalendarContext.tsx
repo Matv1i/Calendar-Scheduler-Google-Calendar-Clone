@@ -24,10 +24,10 @@ interface Events {
 }
 
 interface CalendarContextProps {
-  selectedMonth: Date
+  selectedDay: Date
   calendarDays: Date[]
   weekDays: string[]
-  setSelectedMonth: React.Dispatch<React.SetStateAction<Date>>
+  setSelectedDay: React.Dispatch<React.SetStateAction<Date>>
   goToNextMonth: () => void
   goToPreviousMonth: () => void
   selectedWeek: Date[]
@@ -35,6 +35,8 @@ interface CalendarContextProps {
   addEvent: (event: Events) => void
   removeEvent: (id: string) => void
   setEvents: React.Dispatch<React.SetStateAction<Events[]>>
+  showModal: boolean
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const CalendarContext = createContext<CalendarContextProps | undefined>(
@@ -44,8 +46,9 @@ const CalendarContext = createContext<CalendarContextProps | undefined>(
 export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [selectedMonth, setSelectedMonth] = useState(new Date())
+  const [selectedDay, setSelectedDay] = useState(new Date())
   const [events, setEvents] = useState<Events[]>([])
+  const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
     const storedEvents = localStorage.getItem("events")
@@ -61,23 +64,23 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
   const weekDays: string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
 
   const calendarDays = useMemo(() => {
-    const firstWeekStart = startOfWeek(startOfMonth(selectedMonth))
-    const lastWeek = endOfWeek(endOfMonth(selectedMonth))
+    const firstWeekStart = startOfWeek(startOfMonth(selectedDay))
+    const lastWeek = endOfWeek(endOfMonth(selectedDay))
     return eachDayOfInterval({ start: firstWeekStart, end: lastWeek })
-  }, [selectedMonth])
+  }, [selectedDay])
 
   const selectedWeek = useMemo(() => {
-    const firstweek = startOfWeek(selectedMonth)
-    const endweek = endOfWeek(selectedMonth)
+    const firstweek = startOfWeek(selectedDay)
+    const endweek = endOfWeek(selectedDay)
     return eachDayOfInterval({ start: firstweek, end: endweek })
-  }, [selectedMonth])
+  }, [selectedDay])
 
   const goToNextMonth = () => {
-    setSelectedMonth((prevMonth) => addMonths(prevMonth, 1))
+    setSelectedDay((prevMonth) => addMonths(prevMonth, 1))
   }
 
   const goToPreviousMonth = () => {
-    setSelectedMonth((prevMonth) => addMonths(prevMonth, -1))
+    setSelectedDay((prevMonth) => addMonths(prevMonth, -1))
   }
 
   const addEvent = (event: Events) => {
@@ -91,10 +94,10 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <CalendarContext.Provider
       value={{
-        selectedMonth,
+        selectedDay,
         calendarDays,
         weekDays,
-        setSelectedMonth,
+        setSelectedDay,
         goToNextMonth,
         goToPreviousMonth,
         selectedWeek,
@@ -102,6 +105,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
         addEvent,
         removeEvent,
         setEvents,
+        setShowModal,
+        showModal,
       }}
     >
       {children}
