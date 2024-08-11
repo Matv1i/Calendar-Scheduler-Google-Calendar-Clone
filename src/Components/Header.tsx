@@ -1,18 +1,37 @@
 import React from "react"
 import { useCalendar } from "../Context/CalendarContext"
-import { isSameDay, format } from "date-fns"
+import { isSameDay, format, setDate } from "date-fns"
 
 const Header: React.FC = () => {
-  const { selectedWeek, selectedDay } = useCalendar()
+  const {
+    selectedWeek,
+    selectedDay,
+    setSelectedDay,
+    goToNextWeek,
+    goToPreviousWeek,
+  } = useCalendar()
   return (
     <div className="w-full pt-3  h-30 sticky top-0 z-10    bg-white flex flex-col gap-1">
       <div className="w-full h-full flex justify-between">
         <div className="flex gap-1 mb-2 pl-8 px-5  items-center">
-          <p className="text-black flex py-0.5 bg-gray-200 rounded-l-lg px-2">
+          <p
+            className="text-black  cursor-pointer flex   py-0.5 bg-gray-200 rounded-l-lg px-2"
+            onClick={goToPreviousWeek}
+          >
             {"<"}
           </p>
-          <p className="bg-gray-200 text-sm px-3  py-1">Today</p>
-          <p className="bg-gray-200 px-2 py-0.5 rounded-r-lg">{">"}</p>
+          <p
+            className="bg-gray-200 text-sm px-3 cursor-pointer py-1"
+            onClick={() => setSelectedDay(new Date())}
+          >
+            Today
+          </p>
+          <p
+            className="bg-gray-200 px-2 py-0.5 cursor-pointer rounded-r-lg"
+            onClick={goToNextWeek}
+          >
+            {">"}
+          </p>
         </div>
         <div className="flex justify-center items-center  bg-gray-200 px-2 rounded-md gap-3">
           <img

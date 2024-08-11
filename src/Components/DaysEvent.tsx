@@ -20,7 +20,7 @@ const DaysEvent: React.FC = () => {
   }
 
   return (
-    <div className="w-4/5 h-full scroll- flex flex-col overflow-auto">
+    <div className="w-4/5 h-full z-0 flex flex-col overflow-auto">
       <Header />
       <div className="flex flex-row flex-grow">
         <div className="grid grid-rows-24 w-20 ">

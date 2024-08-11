@@ -12,6 +12,7 @@ import {
   endOfMonth,
   eachDayOfInterval,
   addMonths,
+  addWeeks,
 } from "date-fns"
 
 interface Events {
@@ -30,6 +31,8 @@ interface CalendarContextProps {
   setSelectedDay: React.Dispatch<React.SetStateAction<Date>>
   goToNextMonth: () => void
   goToPreviousMonth: () => void
+  goToNextWeek: () => void
+  goToPreviousWeek: () => void
   selectedWeek: Date[]
   events: Events[]
   addEvent: (event: Events) => void
@@ -83,6 +86,14 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
     setSelectedDay((prevMonth) => addMonths(prevMonth, -1))
   }
 
+  const goToNextWeek = () => {
+    setSelectedDay((prevWeek) => addWeeks(prevWeek, 1))
+  }
+
+  const goToPreviousWeek = () => {
+    setSelectedDay((prevWeek) => addWeeks(prevWeek, -1))
+  }
+
   const addEvent = (event: Events) => {
     setEvents((prevEvents) => [...prevEvents, event])
   }
@@ -107,6 +118,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
         setEvents,
         setShowModal,
         showModal,
+        goToNextWeek,
+        goToPreviousWeek,
       }}
     >
       {children}

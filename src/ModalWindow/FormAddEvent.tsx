@@ -51,7 +51,7 @@ const FormAddEvent: React.FC<PropsDate> = ({ certainDate }) => {
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center transition scale-100 z-20 bg-black bg-opacity-50">
       <div className="bg-white p-4 rounded-md shadow-lg w-1/3">
         <h2 className="text-lg font-bold mb-4">Добавить новое событие</h2>
         <div className="mb-4">
