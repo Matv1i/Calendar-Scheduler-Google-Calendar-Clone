@@ -14,7 +14,7 @@ const MiniCalendar: React.FC = () => {
   } = useCalendar()
 
   return (
-    <div className="flex flex-col bg-black-nondark  rounded-lg ">
+    <div className="flex flex-col bg-black-nondark dark:bg-black-dark  rounded-lg ">
       <div className="flex justify-between p-2 items-center">
         <div className="text-3xl font-light">
           <p className="inline">{format(selectedDay, "MMMM")}</p>
@@ -57,7 +57,7 @@ const MiniCalendar: React.FC = () => {
             <div
               key={index}
               onClick={() => setSelectedDay(day)}
-              className={`border border-black-nondark cursor-pointer relative p-2 rounded-full flex flex-col justify-center items-center h-9 ${
+              className={` bg-black-nondark dark:bg-black-dark cursor-pointer relative p-2 rounded-full flex flex-col justify-center items-center h-9 ${
                 isCurrentDay ? "bg-red-700" : "bg-black-nondark"
               } ${isCurrentMonth ? "text-white" : "text-gray-500"}`}
             >

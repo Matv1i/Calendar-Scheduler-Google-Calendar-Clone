@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react"
 import { useCalendar } from "../Context/CalendarContext"
 
 type PropsDate = {
-  certainDate?: Date
+  certainDate: Date | null
+  setOpenModal: (smth: boolean) => void
 }
 
-const FormAddEvent: React.FC<PropsDate> = ({ certainDate }) => {
+const FormAddEvent: React.FC<PropsDate> = ({ certainDate, setOpenModal }) => {
   const { addEvent, setShowModal } = useCalendar()
   const [newEvent, setNewEvent] = useState({
     name: "",
@@ -39,7 +40,7 @@ const FormAddEvent: React.FC<PropsDate> = ({ certainDate }) => {
     setShowModal(false)
     setNewEvent({
       name: "",
-      date: certainDate || "",
+      date: "",
       timeStart: "",
       timeEnd: "",
       color: "",
@@ -51,7 +52,9 @@ const FormAddEvent: React.FC<PropsDate> = ({ certainDate }) => {
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center transition scale-100 z-20 bg-black bg-opacity-50">
+    <div
+      className={`fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50 transition-transform duration-300 `}
+    >
       <div className="bg-white p-4 rounded-md shadow-lg w-1/3">
         <h2 className="text-lg font-bold mb-4">Добавить новое событие</h2>
         <div className="mb-4">
@@ -68,7 +71,6 @@ const FormAddEvent: React.FC<PropsDate> = ({ certainDate }) => {
           <label className="block mb-1">Время начала:</label>
           <input
             type="time"
-            v-model="hours"
             step="900"
             className="w-full border p-2 rounded"
             value={newEvent.timeStart}
@@ -88,7 +90,7 @@ const FormAddEvent: React.FC<PropsDate> = ({ certainDate }) => {
             }
           />
         </div>
-        {certainDate ? null : (
+        {certainDate === null ? (
           <div className="mb-4">
             <label className="block mb-1">Date:</label>
             <input
@@ -100,7 +102,7 @@ const FormAddEvent: React.FC<PropsDate> = ({ certainDate }) => {
               }
             />
           </div>
-        )}
+        ) : null}
 
         <div className="mb-4 flex gap-2">
           <p>Pick a color:</p>
@@ -131,7 +133,9 @@ const FormAddEvent: React.FC<PropsDate> = ({ certainDate }) => {
         <div className="flex justify-end">
           <button
             className="mr-2 px-4 py-2 bg-gray-200 rounded"
-            onClick={() => setShowModal(false)}
+            onClick={() =>
+              certainDate ? setShowModal(false) : setOpenModal(false)
+            }
           >
             Отмена
           </button>

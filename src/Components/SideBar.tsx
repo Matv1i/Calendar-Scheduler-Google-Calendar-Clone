@@ -15,16 +15,19 @@ interface Events {
 }
 
 const SideBar: React.FC = () => {
-  const { setShowModal, showModal } = useCalendar()
+  const { setDarkTheme, darkTheme } = useCalendar()
+
+  const [openModal, setOpenModal] = useState(false)
+
+  const NODATA = null
 
   return (
     <>
-      <div className="text-white bg-black-nondark sticky w-50 h-full flex flex-col">
+      <div className="text-white border-r-red-600 bg-black-nondark dark:bg-black-dark sticky w-80 h-full flex flex-col">
         <div className="flex justify-between items-center p-4">
-          <p className="font-semiserif font-light">My Calendar</p>
           <div
-            onClick={() => setShowModal(true)}
-            className="text-2xl cursor-pointer rounded-md bg-gray-dark px-3 flex justify-center items-center"
+            onClick={() => setOpenModal(true)}
+            className="text-2xl cursor-pointer rounded-md bg-black-nondark dark:bg-black-da px-3 flex justify-center items-center"
           >
             +
           </div>
@@ -34,7 +37,9 @@ const SideBar: React.FC = () => {
         <FutureEvents />
       </div>
 
-      {showModal && <FormAddEvent />}
+      {openModal && (
+        <FormAddEvent certainDate={NODATA} setOpenModal={setOpenModal} />
+      )}
     </>
   )
 }

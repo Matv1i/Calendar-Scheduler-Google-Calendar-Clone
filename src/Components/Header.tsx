@@ -11,9 +11,9 @@ const Header: React.FC = () => {
     goToPreviousWeek,
   } = useCalendar()
   return (
-    <div className="w-full pt-3  h-30 sticky top-0 z-10    bg-white flex flex-col gap-1">
-      <div className="w-full h-full flex justify-between">
-        <div className="flex gap-1 mb-2 pl-8 px-5  items-center">
+    <div className="w-full pt-3 dark:bg-black-dark  h-30 sticky top-0 z-10    bg-white flex flex-col gap-1">
+      <div className="w-full dark:bg-black-dark h-full flex justify-between">
+        <div className="flex gap-1 mb-2 pl-8 px-5 dark:bg-black-dark items-center">
           <p
             className="text-black  cursor-pointer flex   py-0.5 bg-gray-200 rounded-l-lg px-2"
             onClick={goToPreviousWeek}
@@ -33,22 +33,14 @@ const Header: React.FC = () => {
             {">"}
           </p>
         </div>
-        <div className="flex justify-center items-center  bg-gray-200 px-2 rounded-md gap-3">
-          <img
-            src="src/assets/pngwing.com (2).png"
-            className="object-contain"
-            width={23}
-          />
-          <input placeholder="Search" className="bg-gray-200" />
-        </div>
       </div>
-      <div className="flex-grow grid grid-cols-7 border-l ml-20">
+      <div className=" dark:bg-black-dark flex-grow grid grid-cols-7 border-l ml-20">
         {selectedWeek.map((day, dayIndex) => {
           const isToday = isSameDay(selectedDay, day)
           return (
             <div
               key={dayIndex}
-              className={`relative border-r ${
+              className={`dark:bg-black-dark dark:text-white  relative border-r ${
                 isToday ? "bg-gray-100" : "bg-white"
               } cursor-pointer`}
             >

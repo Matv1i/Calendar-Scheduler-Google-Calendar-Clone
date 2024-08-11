@@ -20,7 +20,7 @@ const DaysEvent: React.FC = () => {
   }
 
   return (
-    <div className="w-4/5 h-full z-0 flex flex-col overflow-auto">
+    <div className={`flex-1 h-full z-0 flex flex-col overflow-auto `}>
       <Header />
       <div className="flex flex-row flex-grow">
         <div className="grid grid-rows-24 w-20 ">
@@ -89,10 +89,7 @@ const DaysEvent: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal for Adding Event */}
       {showModal && <FormAddEvent certainDate={newDate} />}
-
-      {/* Modal for Entire Event  */}
     </div>
   )
 }

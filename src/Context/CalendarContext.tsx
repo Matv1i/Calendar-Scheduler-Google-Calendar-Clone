@@ -40,6 +40,8 @@ interface CalendarContextProps {
   setEvents: React.Dispatch<React.SetStateAction<Events[]>>
   showModal: boolean
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>
+  setDarkTheme: React.Dispatch<React.SetStateAction<boolean>>
+  darkTheme: boolean
 }
 
 const CalendarContext = createContext<CalendarContextProps | undefined>(
@@ -52,6 +54,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [events, setEvents] = useState<Events[]>([])
   const [showModal, setShowModal] = useState(false)
+  const [darkTheme, setDarkTheme] = useState(false)
 
   useEffect(() => {
     const storedEvents = localStorage.getItem("events")
@@ -120,6 +123,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
         showModal,
         goToNextWeek,
         goToPreviousWeek,
+        setDarkTheme,
+        darkTheme,
       }}
     >
       {children}
