@@ -52,6 +52,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [selectedDay, setSelectedDay] = useState(new Date())
+
   const [events, setEvents] = useState<Events[]>([])
   const [showModal, setShowModal] = useState(false)
   const [darkTheme, setDarkTheme] = useState(false)

@@ -36,7 +36,7 @@ const Header: React.FC = () => {
       </div>
       <div className=" dark:bg-black-dark flex-grow grid grid-cols-7 border-l ml-20">
         {selectedWeek.map((day, dayIndex) => {
-          const isToday = isSameDay(selectedDay, day)
+          const isToday = isSameDay(new Date(), day)
           return (
             <div
               key={dayIndex}
@@ -44,9 +44,11 @@ const Header: React.FC = () => {
                 isToday ? "bg-gray-100" : "bg-white"
               } cursor-pointer`}
             >
-              <div className="flex flex-col items-center py-2 border-b">
-                <p className="font-medium">{format(day, "EEE")}</p>
-                <p className="text-gray-600">{format(day, "dd")}</p>
+              <div className="flex flex-col  pl-4 items-start py-2 border-b">
+                <p className="text-sm">{format(day, "EEE")}</p>
+                <p className="text-gray-600 font-bold text-2xl">
+                  {format(day, "dd")}
+                </p>
               </div>
             </div>
           )

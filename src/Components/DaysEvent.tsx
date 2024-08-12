@@ -34,9 +34,9 @@ const DaysEvent: React.FC = () => {
           ))}
         </div>
 
-        <div className="flex-grow grid grid-cols-7 border-l ">
+        <div className="flex-grow grid grid-cols-7 z-0 border-l ">
           {selectedWeek.map((day, dayIndex) => {
-            const isToday = checkSameDay(selectedDay, day)
+            const isToday = checkSameDay(new Date(), day)
             return (
               <div
                 key={dayIndex}
@@ -45,9 +45,17 @@ const DaysEvent: React.FC = () => {
                 } cursor-pointer`}
                 onClick={() => handleDayClick(day)}
               >
+                <div className="grid grid-rows-24 w-full ">
+                  {hours.map((hour, index) => (
+                    <div
+                      key={hour}
+                      className="h-16 flex border-b items-center justify-center  text-gray-500"
+                    ></div>
+                  ))}
+                </div>
                 <div className="flex flex-col items-center  border-b"></div>
 
-                <div className="relative h-full">
+                <div className="relativ z-10 h-full">
                   {events
                     .filter((event) => checkSameDay(event.date, day))
                     .map((event, eventIndex) => {

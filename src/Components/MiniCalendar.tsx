@@ -51,13 +51,13 @@ const MiniCalendar: React.FC = () => {
           const isCurrentMonth = isSameMonth(day, selectedDay)
 
           const dayEvents = events.filter((event) => isSameDay(day, event.date))
-          const isCurrentDay = isSameDay(day, selectedDay)
+          const isCurrentDay = isSameDay(day, new Date())
 
           return (
             <div
               key={index}
               onClick={() => setSelectedDay(day)}
-              className={` bg-black-nondark dark:bg-black-dark cursor-pointer relative p-2 rounded-full flex flex-col justify-center items-center h-9 ${
+              className={` bg-black-nondark dark:bg-black-dark cursor-pointer relative p-2 rounded-full flex flex-col justify-center items-center h-9 w-9 ${
                 isCurrentDay ? "bg-red-700" : "bg-black-nondark"
               } ${isCurrentMonth ? "text-white" : "text-gray-500"}`}
             >
