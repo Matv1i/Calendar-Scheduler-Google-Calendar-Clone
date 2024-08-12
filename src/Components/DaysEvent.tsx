@@ -87,7 +87,7 @@ const DaysEvent: React.FC = () => {
                     ></div>
                   ))}
                 </div>
-                <div className="relativ z-10 h-full">
+                <div className="relative z-10 h-full">
                   {events
                     .filter((event) => checkSameDay(event.date, day))
                     .map((event, eventIndex) => {
