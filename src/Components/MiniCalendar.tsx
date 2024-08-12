@@ -51,7 +51,7 @@ const MiniCalendar: React.FC = () => {
           const isCurrentMonth = isSameMonth(day, selectedDay)
 
           const dayEvents = events.filter((event) => isSameDay(day, event.date))
-          const isCurrentDay = isSameDay(day, new Date())
+          const isCurrentDay = isSameDay(day, selectedDay)
 
           return (
             <div

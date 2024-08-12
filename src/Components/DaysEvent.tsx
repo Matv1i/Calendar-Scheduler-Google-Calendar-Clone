@@ -3,17 +3,30 @@ import { format, isSameDay as checkSameDay, parse } from "date-fns"
 import { useCalendar } from "../Context/CalendarContext"
 import FormAddEvent from "../ModalWindow/FormAddEvent"
 import Header from "./Header"
-import { da } from "date-fns/locale"
+import OpenedEvent from "../ModalWindow/OpenedEvent"
+
+interface Event {
+  id: string
+  name: string
+  date: Date
+  timeStart: string
+  timeEnd: string
+  color: string
+}
 
 const DaysEvent: React.FC = () => {
-  const { selectedWeek, events, showModal, setShowModal } = useCalendar()
+  const { selectedWeek, events, showModal, setShowModal, selectedDay } =
+    useCalendar()
 
   const [pickedDate, setPickedDate] = useState<Date | null>(null)
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
 
   const [newDate, setDate] = useState<Date | undefined>(undefined)
   const [startHour, setStartHour] = useState<number | null>(null)
   const [endHour, setEndHour] = useState<number | null>(null)
   const [dragging, setDragging] = useState(false)
+  //for openedEvent
+  const [openFullModal, setOpenFullModal] = useState(false)
 
   const hours: string[] = Array.from({ length: 24 }, (_, i) =>
     format(new Date(0, 0, 0, i), "ha")
@@ -40,6 +53,11 @@ const DaysEvent: React.FC = () => {
     }
   }
 
+  const handleEvent = (event: Event) => {
+    setOpenFullModal(true)
+    setSelectedEvent(event)
+  }
+
   return (
     <div
       className="flex-1 h-full z-0 flex flex-col overflow-auto"
@@ -60,7 +78,7 @@ const DaysEvent: React.FC = () => {
 
         <div className="flex-grow grid grid-cols-7 z-0 border-l">
           {selectedWeek.map((day, dayIndex) => {
-            const isToday = checkSameDay(new Date(), day)
+            const isToday = checkSameDay(selectedDay, day)
             return (
               <div
                 key={dayIndex}
@@ -87,7 +105,7 @@ const DaysEvent: React.FC = () => {
                     ></div>
                   ))}
                 </div>
-                <div className="relative z-10 h-full">
+                <div className=" z-10 h-auto ">
                   {events
                     .filter((event) => checkSameDay(event.date, day))
                     .map((event, eventIndex) => {
@@ -108,6 +126,7 @@ const DaysEvent: React.FC = () => {
 
                       return (
                         <div
+                          onClick={() => handleEvent(event)}
                           key={eventIndex}
                           className={`absolute snap-y snap-mandatory ${event.color} left-1 right-1 min-h-24 text-white rounded-md p-1`}
                           style={{
@@ -134,6 +153,16 @@ const DaysEvent: React.FC = () => {
           certainDate={newDate}
           startHour={startHour}
           endHour={endHour}
+        />
+      )}
+      {openFullModal && (
+        <OpenedEvent
+          id={selectedEvent?.id}
+          name={selectedEvent?.name}
+          timeStart={selectedEvent?.timeStart}
+          timeEnd={selectedEvent?.timeEnd}
+          color={selectedEvent?.color}
+          setOpenFullModal={setOpenFullModal}
         />
       )}
     </div>

@@ -5,43 +5,20 @@ export default {
   theme: {
     extend: {
       keyframes: {
-        "fade-in": {
-          "0%": {
-            opacity: 0,
-          },
-          "100%": {
-            opacity: 1,
-          },
+        modalFadeIn: {
+          "0%": { opacity: "0", transform: "scale(0.8)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
         },
-        "fade-out": {
-          "0%": {
-            opacity: 1,
-          },
-          "100%": {
-            opacity: 0,
-          },
-        },
-        "fade-in-top-left": {
-          "0%": {
-            opacity: 0,
-            transform: "translate3d(-100%, -100%, 0)",
-          },
-          "100%": {
-            opacity: 1,
-            transform: "translate3d(0, 0, 0)",
-          },
-        },
-        "fade-in-top-right": {
-          "0%": {
-            opacity: 0,
-            transform: "translate3d(100%, -100%, 0)",
-          },
-          "100%": {
-            opacity: 1,
-            transform: "translate3d(0, 0, 0)",
-          },
+        modalFadeOut: {
+          "0%": { opacity: "1", transform: "scale(1)" },
+          "100%": { opacity: "0", transform: "scale(0.8)" },
         },
       },
+      animation: {
+        modalFadeIn: "modalFadeIn 0.2s ease-out forwards",
+        modalFadeOut: "modalFadeOut 0.2s ease-out forwards",
+      },
+
       colors: {
         "black-nondark": "#18181B",
         "black-dark": "#121314",

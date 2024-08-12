@@ -1,8 +1,12 @@
 import SideBar from "../Components/SideBar"
 import { CalendarProvider } from "../Context/CalendarContext"
 import DaysEvent from "../Components/DaysEvent"
+import { useEffect, useState } from "react"
 
 const Calendar = () => {
+  useEffect
+
+  useEffect
   return (
     <CalendarProvider>
       <div className="w-full h-screen flex">

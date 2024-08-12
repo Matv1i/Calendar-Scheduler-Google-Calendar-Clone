@@ -36,7 +36,7 @@ const Header: React.FC = () => {
       </div>
       <div className=" dark:bg-black-dark flex-grow grid grid-cols-7 border-l ml-20">
         {selectedWeek.map((day, dayIndex) => {
-          const isToday = isSameDay(new Date(), day)
+          const isToday = isSameDay(selectedDay, day)
           return (
             <div
               key={dayIndex}

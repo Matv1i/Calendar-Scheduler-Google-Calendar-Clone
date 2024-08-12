@@ -23,9 +23,9 @@ const FormAddEvent: React.FC<PropsDate> = ({
     color: "",
   })
 
+  const [animationClass, setAnimationClass] = useState("modal-enter")
+
   useEffect(() => {
-    console.log(endHour)
-    console.log(startHour)
     if (certainDate) {
       setNewEvent((prevEvent) => ({
         ...prevEvent,
@@ -58,7 +58,10 @@ const FormAddEvent: React.FC<PropsDate> = ({
       return
     }
     addEvent({ ...newEvent, id: Math.random().toString(36).substr(2, 9) })
+    setAnimationClass("modal-exit")
+
     setShowModal(false)
+    setOpenModal?.(false)
     setNewEvent({
       name: "",
       date: "",
@@ -72,9 +75,20 @@ const FormAddEvent: React.FC<PropsDate> = ({
     setNewEvent({ ...newEvent, color })
   }
 
+  const handleClose = () => {
+    setAnimationClass("modal-exit")
+    setTimeout(() => {
+      certainDate ? setShowModal(false) : setOpenModal?.(false)
+    }, 300)
+  }
+
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50 transition-transform duration-300`}
+      className={`fixed inset-0 flex items-center justify-center z-20   transition-transform duration-300 ${
+        animationClass === "modal-enter"
+          ? "animate-modalFadeIn"
+          : "animate-modalFadeOut"
+      }`}
     >
       <div className="bg-white p-4 rounded-md shadow-lg w-1/3">
         <h2 className="text-lg font-bold mb-4">Добавить новое событие</h2>
@@ -154,9 +168,7 @@ const FormAddEvent: React.FC<PropsDate> = ({
         <div className="flex justify-end">
           <button
             className="mr-2 px-4 py-2 bg-gray-200 rounded"
-            onClick={() =>
-              certainDate ? setShowModal(false) : setOpenModal?.(false)
-            }
+            onClick={handleClose}
           >
             Отмена
           </button>
