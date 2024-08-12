@@ -3,10 +3,17 @@ import { useCalendar } from "../Context/CalendarContext"
 
 type PropsDate = {
   certainDate: Date | null
-  setOpenModal: (smth: boolean) => void
+  setOpenModal?: (smth: boolean) => void
+  startHour?: number | null
+  endHour?: number | null
 }
 
-const FormAddEvent: React.FC<PropsDate> = ({ certainDate, setOpenModal }) => {
+const FormAddEvent: React.FC<PropsDate> = ({
+  certainDate,
+  setOpenModal,
+  startHour,
+  endHour,
+}) => {
   const { addEvent, setShowModal } = useCalendar()
   const [newEvent, setNewEvent] = useState({
     name: "",
@@ -17,13 +24,27 @@ const FormAddEvent: React.FC<PropsDate> = ({ certainDate, setOpenModal }) => {
   })
 
   useEffect(() => {
+    console.log(endHour)
+    console.log(startHour)
     if (certainDate) {
       setNewEvent((prevEvent) => ({
         ...prevEvent,
         date: certainDate,
       }))
     }
-  }, [certainDate])
+    if (startHour !== null) {
+      setNewEvent((prevEvent) => ({
+        ...prevEvent,
+        timeStart: `${String(startHour).padStart(2, "0")}:00`,
+      }))
+    }
+    if (endHour !== null) {
+      setNewEvent((prevEvent) => ({
+        ...prevEvent,
+        timeEnd: `${String(endHour + 1).padStart(2, "0")}:00`,
+      }))
+    }
+  }, [certainDate, startHour, endHour])
 
   const handleSaveEvent = () => {
     if (
@@ -53,7 +74,7 @@ const FormAddEvent: React.FC<PropsDate> = ({ certainDate, setOpenModal }) => {
 
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50 transition-transform duration-300 `}
+      className={`fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50 transition-transform duration-300`}
     >
       <div className="bg-white p-4 rounded-md shadow-lg w-1/3">
         <h2 className="text-lg font-bold mb-4">Добавить новое событие</h2>
@@ -90,9 +111,9 @@ const FormAddEvent: React.FC<PropsDate> = ({ certainDate, setOpenModal }) => {
             }
           />
         </div>
-        {certainDate === null ? (
+        {!certainDate && (
           <div className="mb-4">
-            <label className="block mb-1">Date:</label>
+            <label className="block mb-1">Дата:</label>
             <input
               type="date"
               className="w-full border p-2 rounded"
@@ -102,11 +123,11 @@ const FormAddEvent: React.FC<PropsDate> = ({ certainDate, setOpenModal }) => {
               }
             />
           </div>
-        ) : null}
+        )}
 
         <div className="mb-4 flex gap-2">
-          <p>Pick a color:</p>
-          <div className="flex gap-3 ">
+          <p>Выберите цвет:</p>
+          <div className="flex gap-3">
             <img
               onClick={() => handleColor("bg-blue-spec")}
               width={20}
@@ -134,7 +155,7 @@ const FormAddEvent: React.FC<PropsDate> = ({ certainDate, setOpenModal }) => {
           <button
             className="mr-2 px-4 py-2 bg-gray-200 rounded"
             onClick={() =>
-              certainDate ? setShowModal(false) : setOpenModal(false)
+              certainDate ? setShowModal(false) : setOpenModal?.(false)
             }
           >
             Отмена

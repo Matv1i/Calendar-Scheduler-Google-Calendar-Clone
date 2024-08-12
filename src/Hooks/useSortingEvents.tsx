@@ -12,10 +12,14 @@ interface Events {
 
 const useSortingEvents = () => {
   const { events } = useCalendar()
-  const sortEvents = (events: Events[]): Events[] => {
+  const sortEvents = (events: Events[]) => {
     return events.sort((a, b) => {
-      if (a.date.getTime() !== b.date.getTime()) {
-        return a.date.getTime() - b.date.getTime()
+      const dateA =
+        a.date instanceof Date ? a.date : parseISO(a.date as unknown as string)
+      const dateB =
+        b.date instanceof Date ? b.date : parseISO(b.date as unknown as string)
+      if (dateA.getTime() !== dateB.getTime()) {
+        return dateA.getTime() - dateB.getTime()
       }
 
       return a.timeStart.localeCompare(b.timeStart)
