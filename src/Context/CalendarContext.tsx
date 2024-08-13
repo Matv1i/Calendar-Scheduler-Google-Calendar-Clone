@@ -42,6 +42,8 @@ interface CalendarContextProps {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>
   setDarkTheme: React.Dispatch<React.SetStateAction<boolean>>
   darkTheme: boolean
+  openFullModal: boolean
+  setOpenFullModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const CalendarContext = createContext<CalendarContextProps | undefined>(
@@ -51,9 +53,13 @@ const CalendarContext = createContext<CalendarContextProps | undefined>(
 export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  //to control a window with info about event
+  const [openFullModal, setOpenFullModal] = useState(false)
   const [selectedDay, setSelectedDay] = useState(new Date())
 
   const [events, setEvents] = useState<Events[]>([])
+
+  // to controle editing window
   const [showModal, setShowModal] = useState(false)
   const [darkTheme, setDarkTheme] = useState(false)
 
@@ -126,6 +132,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
         goToPreviousWeek,
         setDarkTheme,
         darkTheme,
+        setOpenFullModal,
+        openFullModal,
       }}
     >
       {children}

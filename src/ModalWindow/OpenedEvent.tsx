@@ -1,28 +1,28 @@
 import React from "react"
 import { useCalendar } from "../Context/CalendarContext"
 import { useState } from "react"
-import Popup from "./Popup"
+
+import FormAddEvent from "./FormAddEvent"
 
 interface Event {
   id: string
   name: string
-  date: Date
+  date?: Date
   timeStart: string
   timeEnd: string
-  color: string
-  setOpenFullModal: (e: boolean) => void
+  color?: string
 }
 
 const OpenedEvent: React.FC<Event> = ({
   id,
   name,
-  date,
+
   timeStart,
   timeEnd,
-  color,
-  setOpenFullModal,
 }) => {
-  const { events, setEvents } = useCalendar()
+  const { events, setEvents, setOpenFullModal } = useCalendar()
+
+  const [editWindow, setEditWindow] = useState(false)
 
   const handleClick = () => {
     setOpenFullModal(false)
@@ -41,11 +41,19 @@ const OpenedEvent: React.FC<Event> = ({
     handleClick()
   }
 
+  const edit = () => {
+    setEditWindow(true)
+  }
+  //I dont know why but i have a problem with a animation when i wanna close editing window, i press save or cancell and animation start and has a couple frames with OpenedEvent so i solve this problem with hidden state, and when i press idit modal will be hidden and not hidden after i closed Editing windows
+  const [hidden, setHidden] = useState(false)
+
   return (
     <>
       <div
         onClick={closeModal}
-        className={`fixed inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50 transition-transform duration-300`}
+        className={`fixed ${
+          hidden ? "hidden" : ""
+        } inset-0 flex items-center justify-center z-20 bg-black bg-opacity-50 transition-transform duration-300`}
       >
         <div className="bg-white p-4 rounded-md shadow-lg w-1/3">
           <div className="gap-4">
@@ -59,7 +67,12 @@ const OpenedEvent: React.FC<Event> = ({
             </div>
           </div>
           <div className="flex justify-end">
-            <button className="mr-2 px-4 py-2 bg-gray-200 rounded">Edit</button>
+            <button
+              onClick={edit}
+              className="mr-2 px-4 py-2 bg-gray-200 rounded"
+            >
+              Edit
+            </button>
             <button
               onClick={deleteEvent}
               className="px-4 py-2 bg-red-500 text-white rounded"
@@ -69,6 +82,7 @@ const OpenedEvent: React.FC<Event> = ({
           </div>
         </div>
       </div>
+      {editWindow && <FormAddEvent setHidden={setHidden} id={id} />}
     </>
   )
 }

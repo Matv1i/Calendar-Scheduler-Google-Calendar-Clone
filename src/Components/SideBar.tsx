@@ -1,22 +1,11 @@
 import React, { useState } from "react"
-import { useCalendar } from "../Context/CalendarContext"
+
 import MiniCalendar from "./MiniCalendar"
-import { format } from "date-fns"
+
 import FormAddEvent from "../ModalWindow/FormAddEvent"
 import FutureEvents from "./FutureEvents"
 
-interface Events {
-  id: string
-  name: string
-  date: Date
-  timeStart: string
-  timeEnd: string
-  color: string
-}
-
 const SideBar: React.FC = () => {
-  const { setDarkTheme, darkTheme } = useCalendar()
-
   const [openModal, setOpenModal] = useState(false)
 
   const NODATA = null

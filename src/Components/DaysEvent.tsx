@@ -15,8 +15,15 @@ interface Event {
 }
 
 const DaysEvent: React.FC = () => {
-  const { selectedWeek, events, showModal, setShowModal, selectedDay } =
-    useCalendar()
+  const {
+    selectedWeek,
+    events,
+    showModal,
+    setShowModal,
+    selectedDay,
+    setOpenFullModal,
+    openFullModal,
+  } = useCalendar()
 
   const [pickedDate, setPickedDate] = useState<Date | null>(null)
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
@@ -25,8 +32,6 @@ const DaysEvent: React.FC = () => {
   const [startHour, setStartHour] = useState<number | null>(null)
   const [endHour, setEndHour] = useState<number | null>(null)
   const [dragging, setDragging] = useState(false)
-  //for openedEvent
-  const [openFullModal, setOpenFullModal] = useState(false)
 
   const hours: string[] = Array.from({ length: 24 }, (_, i) =>
     format(new Date(0, 0, 0, i), "ha")
@@ -38,6 +43,7 @@ const DaysEvent: React.FC = () => {
     setStartHour(hour)
     setEndHour(hour)
     setDragging(true)
+    console.log(newDate)
   }
 
   const handleMouseUp = () => {
@@ -115,12 +121,11 @@ const DaysEvent: React.FC = () => {
                         new Date()
                       )
                       const startHour =
-                        startTime.getHours() +
-                        (startTime.getMinutes() / 60 - 0.25)
+                        startTime.getHours() + startTime.getMinutes() / 60
 
                       const endTime = parse(event.timeEnd, "HH:mm", new Date())
                       const endHour =
-                        endTime.getHours() + (endTime.getMinutes() / 60 - 0.25)
+                        endTime.getHours() + endTime.getMinutes() / 60
 
                       const eventHeight = ((endHour - startHour) * 100) / 24
 
@@ -128,9 +133,9 @@ const DaysEvent: React.FC = () => {
                         <div
                           onClick={() => handleEvent(event)}
                           key={eventIndex}
-                          className={`absolute snap-y snap-mandatory ${event.color} left-1 right-1 min-h-24 text-white rounded-md p-1`}
+                          className={`absolute snap-y snap-mandatory ${event.color} left-1 right-1 min-h-12 text-white rounded-md p-1`}
                           style={{
-                            top: `${(startHour * 100) / 24 + 1}%`,
+                            top: `${(startHour * 100) / 24}%`,
                             height: `${eventHeight}%`,
                           }}
                         >
@@ -157,12 +162,11 @@ const DaysEvent: React.FC = () => {
       )}
       {openFullModal && (
         <OpenedEvent
-          id={selectedEvent?.id}
-          name={selectedEvent?.name}
-          timeStart={selectedEvent?.timeStart}
-          timeEnd={selectedEvent?.timeEnd}
-          color={selectedEvent?.color}
-          setOpenFullModal={setOpenFullModal}
+          id={selectedEvent?.id || ""}
+          name={selectedEvent?.name || ""}
+          timeStart={selectedEvent?.timeStart || ""}
+          timeEnd={selectedEvent?.timeEnd || ""}
+          color={selectedEvent?.color || ""}
         />
       )}
     </div>
