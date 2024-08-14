@@ -24,6 +24,7 @@ interface Events {
   color: string
 }
 
+import axios from "../axios.tsx"
 interface CalendarContextProps {
   selectedDay: Date
   calendarDays: Date[]
@@ -44,6 +45,8 @@ interface CalendarContextProps {
   darkTheme: boolean
   openFullModal: boolean
   setOpenFullModal: React.Dispatch<React.SetStateAction<boolean>>
+  setDepend: React.Dispatch<React.SetStateAction<boolean>>
+  depend: boolean
 }
 
 const CalendarContext = createContext<CalendarContextProps | undefined>(
@@ -63,16 +66,16 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
   const [showModal, setShowModal] = useState(false)
   const [darkTheme, setDarkTheme] = useState(false)
 
-  useEffect(() => {
-    const storedEvents = localStorage.getItem("events")
-    if (storedEvents) {
-      setEvents(JSON.parse(storedEvents))
+  const [depend, setDepend] = useState(false)
+  async function fetchEvents() {
+    try {
+      const response = await axios.get("http://localhost:5000/events")
+      setEvents(response.data)
+      console.log(response.data)
+    } catch (error) {
+      console.error("There was an error fetching the events!", error)
     }
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem("events", JSON.stringify(events))
-  }, [events])
+  }
 
   const weekDays: string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
 
@@ -111,6 +114,9 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
   const removeEvent = (id: string) => {
     setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id))
   }
+  useEffect(() => {
+    fetchEvents()
+  }, [depend])
 
   return (
     <CalendarContext.Provider
@@ -134,6 +140,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({
         darkTheme,
         setOpenFullModal,
         openFullModal,
+        setDepend,
+        depend,
       }}
     >
       {children}

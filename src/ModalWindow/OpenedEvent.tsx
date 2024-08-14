@@ -1,6 +1,7 @@
 import React from "react"
 import { useCalendar } from "../Context/CalendarContext"
 import { useState } from "react"
+import axios from "../axios.tsx"
 
 import FormAddEvent from "./FormAddEvent"
 
@@ -20,7 +21,7 @@ const OpenedEvent: React.FC<Event> = ({
   timeStart,
   timeEnd,
 }) => {
-  const { events, setEvents, setOpenFullModal } = useCalendar()
+  const { depend, setDepend, setOpenFullModal } = useCalendar()
 
   const [editWindow, setEditWindow] = useState(false)
 
@@ -34,9 +35,13 @@ const OpenedEvent: React.FC<Event> = ({
     }
   }
 
-  const deleteEvent = () => {
-    const newArray = events.filter((eventOld) => eventOld.id !== id)
-    setEvents(newArray)
+  const deleteEvent = async () => {
+    try {
+      await axios.delete(`/events/${id}`)
+      setDepend(!depend)
+    } catch (err) {
+      console.error(err)
+    }
 
     handleClick()
   }
@@ -82,7 +87,7 @@ const OpenedEvent: React.FC<Event> = ({
           </div>
         </div>
       </div>
-      {editWindow && <FormAddEvent setHidden={setHidden} id={id} />}
+      {editWindow && <FormAddEvent setHidden={setHidden} idOfPost={id} />}
     </>
   )
 }

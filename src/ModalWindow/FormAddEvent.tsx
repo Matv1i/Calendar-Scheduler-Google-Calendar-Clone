@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from "react"
 import { useCalendar } from "../Context/CalendarContext"
 import { format } from "date-fns"
+import axios from "../axios"
 
 type PropsDate = {
-  certainDate?: Date | null
+  certainDate?: string | null
   setOpenModal?: (smth: boolean) => void
   startHour?: number | null
   endHour?: number
-  id?: string
+  idOfPost?: string
   setHidden?: (smth: boolean) => void
+  name: string
+  color: string
+}
+interface Events {
+  id: string
+  name: string
+  date: Date
+  timeStart: string
+  timeEnd: string
+  color: string
 }
 
 const FormAddEvent: React.FC<PropsDate> = ({
@@ -16,73 +27,78 @@ const FormAddEvent: React.FC<PropsDate> = ({
   setOpenModal,
   startHour,
   endHour,
-  id,
+  idOfPost,
   setHidden,
 }) => {
-  const { setEvents, addEvent, setShowModal, events, setOpenFullModal } =
+  const { setShowModal, events, setOpenFullModal, setDepend, depend } =
     useCalendar()
-  const [newEvent, setNewEvent] = useState({
-    name: "",
-    date: certainDate ? certainDate.toISOString().split("T")[0] : "",
-    timeStart: "",
-    timeEnd: "",
-    color: "",
-  })
+  const [id, setId] = useState("")
+  const [name, setName] = useState("")
+  const [timeStart, setTimeStart] = useState("")
+  const [timeEnd, settimeEnd] = useState("")
+  const [color, setColor] = useState("")
+  const [date, setDate] = useState(new Date())
 
   const isEditing: boolean = Boolean(id)
   const [animationClass, setAnimationClass] = useState("modal-enter")
 
   useEffect(() => {
-    if (id) {
+    if (idOfPost) {
+      const foundEvent: Events = events.find((event) => event.id === idOfPost)
+
+      setId(idOfPost)
+      setTimeStart(foundEvent?.timeStart)
+      settimeEnd(foundEvent?.timeEnd)
+      setName(foundEvent?.name)
+      setColor(foundEvent?.color)
+      setDate(foundEvent?.date)
       if (setHidden) {
         setHidden(true)
       }
-
-      const foundEvent = events.find((event) => event.id === id)
-      if (foundEvent) {
-        setNewEvent(foundEvent)
-      }
     }
-  }, [id, setHidden, events])
+  }, [idOfPost, setHidden, events])
 
   useEffect(() => {
     if (certainDate) {
-      console.log(certainDate)
-      setNewEvent((prevEvent) => ({
-        ...prevEvent,
-        date: certainDate,
-      }))
+      setDate(certainDate)
     }
     if (startHour !== undefined) {
-      setNewEvent((prevEvent) => ({
-        ...prevEvent,
-        timeStart: `${String(startHour).padStart(2, "0")}:00`,
-      }))
+      setTimeStart(`${String(startHour).padStart(2, "0")}:00`)
     }
     if (endHour !== undefined) {
-      setNewEvent((prevEvent) => ({
-        ...prevEvent,
-        timeEnd: `${String(endHour + 1).padStart(2, "0")}:00`,
-      }))
+      settimeEnd(`${String(endHour).padStart(2, "0")}:00`)
     }
   }, [certainDate, startHour, endHour])
 
-  const handleSaveEvent = () => {
-    const { name, timeStart, timeEnd, color, date } = newEvent
+  const handleSaveEvent = async () => {
     if (!name || !timeStart || !timeEnd || !color || !date) {
       alert("Please input a full form.")
       return
     }
 
-    if (isEditing) {
-      setEvents((prevEvents) =>
-        prevEvents.map((event) => (event.id === id ? newEvent : event))
-      )
-    } else {
-      addEvent({ ...newEvent, id: id || crypto.randomUUID() })
+    const fields = {
+      id: id || crypto.randomUUID(),
+      name,
+      timeStart,
+      timeEnd,
+      color,
+      date,
     }
 
-    setAnimationClass("modal-exit")
+    try {
+      if (isEditing) {
+        await axios.patch("/events", fields)
+      } else {
+        await axios.post("/events", fields)
+      }
+      setAnimationClass("modal-exit")
+      setDepend(!depend)
+    } catch (error) {
+      console.error(
+        "Error while saving event:",
+        error.response?.data || error.message || error
+      )
+    }
   }
 
   const handleAnimationEnd = () => {
@@ -90,7 +106,7 @@ const FormAddEvent: React.FC<PropsDate> = ({
       setShowModal(false)
       setOpenModal?.(false)
       setOpenFullModal(false)
-      setHidden(false)
+      setHidden?.(false)
     }
   }
 
@@ -99,7 +115,7 @@ const FormAddEvent: React.FC<PropsDate> = ({
   }
 
   const handleColor = (color: string) => {
-    setNewEvent((prevEvent) => ({ ...prevEvent, color }))
+    setColor(color)
   }
 
   return (
@@ -113,39 +129,35 @@ const FormAddEvent: React.FC<PropsDate> = ({
     >
       <div className="bg-white p-4 rounded-md shadow-lg w-1/3">
         <h2 className="text-lg font-bold mb-4">
-          {isEditing ? "Редактировать событие" : "Добавить новое событие"}
+          {isEditing ? "Edit event" : "New event "}
         </h2>
         <div className="mb-4">
-          <label className="block mb-1">Название события:</label>
+          <label className="block mb-1">Title Of Event:</label>
           <input
             type="text"
             className="w-full border p-2 rounded"
-            value={newEvent.name}
-            onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
 
         <div className="mb-4">
-          <label className="block mb-1">Время начала:</label>
+          <label className="block mb-1">Start time:</label>
           <input
             type="time"
             step="900"
             className="w-full border p-2 rounded"
-            value={newEvent.timeStart}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, timeStart: e.target.value })
-            }
+            value={timeStart}
+            onChange={(e) => setTimeStart(e.target.value)}
           />
         </div>
         <div className="mb-4">
-          <label className="block mb-1">Время окончания:</label>
+          <label className="block mb-1">End time:</label>
           <input
             type="time"
             className="w-full border p-2 rounded"
-            value={newEvent.timeEnd}
-            onChange={(e) =>
-              setNewEvent({ ...newEvent, timeEnd: e.target.value })
-            }
+            value={timeEnd}
+            onChange={(e) => settimeEnd(e.target.value)}
           />
         </div>
         {!certainDate && (
@@ -154,10 +166,8 @@ const FormAddEvent: React.FC<PropsDate> = ({
             <input
               type="date"
               className="w-full border p-2 rounded"
-              value={newEvent.date}
-              onChange={(e) =>
-                setNewEvent({ ...newEvent, date: e.target.value })
-              }
+              value={format(date, "yyyy-MM-dd")}
+              onChange={(e) => setDate(new Date(e.target.value))}
             />
           </div>
         )}
@@ -193,13 +203,13 @@ const FormAddEvent: React.FC<PropsDate> = ({
             className="mr-2 px-4 py-2 bg-gray-200 rounded"
             onClick={handleClose}
           >
-            Отмена
+            Cancel
           </button>
           <button
             className="px-4 py-2 bg-red-500 text-white rounded"
             onClick={handleSaveEvent}
           >
-            Сохранить
+            Save
           </button>
         </div>
       </div>
